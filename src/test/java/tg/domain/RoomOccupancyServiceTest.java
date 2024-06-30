@@ -2,9 +2,8 @@ package tg.domain;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tg.infrastructure.MockOccupancyImpl;
 import tg.infrastructure.RoomOccupancyRepository;
 
 import java.math.BigDecimal;
@@ -17,11 +16,9 @@ import static tg.domain.RoomType.PREMIUM;
 @ExtendWith(MockitoExtension.class)
 public class RoomOccupancyServiceTest {
 
-    @Mock
-    private RoomOccupancyRepository roomOccupancyRepository;
+    private final RoomOccupancyRepository roomOccupancyRepository = new MockOccupancyImpl();
 
-    @InjectMocks
-    private RoomOccupancyService roomOccupancyService;
+    private final RoomOccupancyService roomOccupancyService = new RoomOccupancyService(roomOccupancyRepository);
 
     @Test
     public void test1() {
@@ -32,12 +29,12 @@ public class RoomOccupancyServiceTest {
         //when
         var usages = roomOccupancyService.getUsage(occupancies);
         //then
-        assertEquals(usages.get(PREMIUM).count(), 3);
-        assertEquals(usages.get(PREMIUM).amount(), new BigDecimal("738"));
-        assertEquals(usages.get(PREMIUM).currency(), "EUR");
-        assertEquals(usages.get(ECONOMY).count(), 3);
-        assertEquals(usages.get(ECONOMY).amount(), new BigDecimal("167.99"));
-        assertEquals(usages.get(ECONOMY).currency(), "EUR");
+        assertEquals(3, usages.get(PREMIUM).count());
+        assertEquals(new BigDecimal("738"), usages.get(PREMIUM).amount());
+        assertEquals("EUR", usages.get(PREMIUM).currency());
+        assertEquals(3, usages.get(ECONOMY).count());
+        assertEquals(new BigDecimal("167.99"), usages.get(ECONOMY).amount());
+        assertEquals("EUR", usages.get(ECONOMY).currency());
     }
 
     @Test
@@ -66,15 +63,16 @@ public class RoomOccupancyServiceTest {
         //when
         var usages = roomOccupancyService.getUsage(occupancies);
         //then
-        assertEquals(usages.get(PREMIUM).count(), 2);
-        assertEquals(usages.get(PREMIUM).amount(), new BigDecimal("583"));
-        assertEquals(usages.get(PREMIUM).currency(), "EUR");
-        assertEquals(usages.get(ECONOMY).count(), 4);
-        assertEquals(usages.get(ECONOMY).amount(), new BigDecimal("189.99"));
-        assertEquals(usages.get(ECONOMY).currency(), "EUR");
+        assertEquals(2, usages.get(PREMIUM).count());
+        assertEquals(new BigDecimal("583"), usages.get(PREMIUM).amount());
+        assertEquals("EUR", usages.get(PREMIUM).currency());
+        assertEquals(4, usages.get(ECONOMY).count());
+        assertEquals(new BigDecimal("189.99"), usages.get(ECONOMY).amount());
+        assertEquals("EUR", usages.get(ECONOMY).currency());
     }
 
     @Test
+    //I don't understand below scenario, in my opinion it is wrong and fails
     public void test4() {
         //given
         OccupancyData dataPremium = new OccupancyData(PREMIUM, 7);
@@ -83,11 +81,11 @@ public class RoomOccupancyServiceTest {
         //when
         var usages = roomOccupancyService.getUsage(occupancies);
         //then
-        assertEquals(usages.get(PREMIUM).count(), 7);
-        assertEquals(usages.get(PREMIUM).amount(), new BigDecimal("1153"));
-        assertEquals(usages.get(PREMIUM).currency(), "EUR");
-        assertEquals(usages.get(ECONOMY).count(), 1);
-        assertEquals(usages.get(ECONOMY).amount(), new BigDecimal("45.99"));
-        assertEquals(usages.get(ECONOMY).currency(), "EUR");
+        assertEquals(7, usages.get(PREMIUM).count());
+        assertEquals(new BigDecimal("1153"), usages.get(PREMIUM).amount());
+        assertEquals("EUR", usages.get(PREMIUM).currency());
+        assertEquals(1, usages.get(ECONOMY).count());
+        assertEquals(new BigDecimal("45.99"), usages.get(ECONOMY).amount());
+        assertEquals("EUR", usages.get(ECONOMY).currency());
     }
 }
