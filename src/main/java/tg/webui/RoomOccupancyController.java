@@ -22,7 +22,8 @@ public class RoomOccupancyController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public UsagesDTO getUsage(@RequestParam Integer freePremium, @RequestParam Integer freeEconomy) {
+    public UsagesDTO getUsage(@RequestParam(value = "freePremium") Integer freePremium,
+                              @RequestParam(value = "freeEconomy") Integer freeEconomy) {
         validate(freePremium, freeEconomy);
         List<OccupancyData> occupancies = List.of(new OccupancyData(PREMIUM, freePremium),
                                                   new OccupancyData(ECONOMY, freeEconomy));
